@@ -10,6 +10,7 @@
       --primary-dark: #059669;
       --primary-light: #ecfdf5;
       --danger: #ef4444;
+      --danger-light: #fef2f2;
       --warning: #f59e0b;
       --bg: #f8fafc;
       --card-bg: #ffffff;
@@ -69,13 +70,17 @@
     .btn-icon {
       background: none;
       border: 1px solid var(--border);
-      padding: 8px;
+      padding: 7px 10px;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      color: var(--text);
+    }
+    .btn-icon:hover {
+      background: #f1f5f9;
     }
 
     /* Tabs */
@@ -170,13 +175,14 @@
       justify-content: space-between;
       align-items: center;
       margin: 16px 0;
+      gap: 8px;
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 10px 16px;
+      padding: 10px 14px;
       font-size: 0.9rem;
       font-weight: 600;
       border-radius: 8px;
@@ -195,6 +201,11 @@
       background: #e2e8f0;
       color: var(--text);
     }
+    .btn-danger-outline {
+      background: transparent;
+      border: 1px solid var(--danger);
+      color: var(--danger);
+    }
 
     /* Cards */
     .item-list {
@@ -206,7 +217,7 @@
     .card {
       background: var(--card-bg);
       border-radius: var(--radius);
-      padding: 14px 16px;
+      padding: 12px 14px;
       box-shadow: var(--shadow);
       border: 1px solid var(--border);
       display: flex;
@@ -229,13 +240,33 @@
       min-width: 0;
     }
 
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
     .card-title {
       font-weight: 700;
       font-size: 1.05rem;
-      margin-bottom: 4px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    .btn-quick-edit {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .btn-quick-edit:hover {
+      background: #f1f5f9;
+      color: var(--text);
     }
 
     .card-meta {
@@ -261,11 +292,11 @@
     .card-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       flex-shrink: 0;
     }
 
-    /* Hybrid Counter (Buttons + Direct Input) */
+    /* Hybrid Counter */
     .counter {
       display: flex;
       align-items: center;
@@ -278,8 +309,8 @@
     .counter button {
       background: none;
       border: none;
-      width: 32px;
-      height: 38px;
+      width: 30px;
+      height: 36px;
       font-size: 1.2rem;
       font-weight: bold;
       cursor: pointer;
@@ -287,7 +318,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.15s;
     }
 
     .counter button:hover {
@@ -299,13 +329,13 @@
       align-items: center;
       padding: 0 4px;
       background: white;
-      height: 38px;
+      height: 36px;
       border-left: 1px solid var(--border);
       border-right: 1px solid var(--border);
     }
 
     .counter-input {
-      width: 48px;
+      width: 44px;
       border: none;
       background: transparent;
       text-align: right;
@@ -328,7 +358,6 @@
       font-weight: 600;
       color: var(--text-muted);
       margin-left: 4px;
-      margin-right: 2px;
       white-space: nowrap;
     }
 
@@ -336,10 +365,25 @@
       background: var(--primary-light);
       border: 1px solid var(--primary);
       color: var(--primary-dark);
-      padding: 9px 11px;
+      padding: 8px 10px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 0.85rem;
+    }
+
+    .btn-quick-delete {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 7px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .btn-quick-delete:hover {
+      background: var(--danger-light);
+      color: var(--danger);
+      border-color: #fecaca;
     }
 
     /* Shopping List Specific */
@@ -367,7 +411,7 @@
     }
 
     .shop-qty-input {
-      width: 44px;
+      width: 46px;
       padding: 4px;
       border: 1px solid var(--border);
       border-radius: 4px;
@@ -465,8 +509,9 @@
     <div class="header-content">
       <h1>🛒 PantryPulse</h1>
       <div style="display: flex; gap: 6px;">
-        <button class="btn-icon" onclick="exportData()" title="Backup Data">💾 Backup</button>
-        <button class="btn-icon" onclick="importPrompt()" title="Restore Data">📥 Restore</button>
+        <button class="btn-icon" onclick="clearAllDataPrompt()" title="Wipe out everything and start completely fresh">🧹 Clean Slate</button>
+        <button class="btn-icon" onclick="exportData()" title="Backup to JSON">💾 Backup</button>
+        <button class="btn-icon" onclick="importPrompt()" title="Restore from JSON">📥 Restore</button>
       </div>
     </div>
     <div class="tabs">
@@ -534,6 +579,12 @@
         <button class="btn btn-primary" onclick="quickAddShoppingItem()">Add</button>
       </div>
 
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+        <button class="btn-icon" style="color: var(--danger); border: none;" onclick="clearEntireShoppingList()">
+          🗑️ Clear Shopping List
+        </button>
+      </div>
+
       <div class="item-list" id="shoppingListContainer"></div>
     </section>
 
@@ -547,7 +598,7 @@
         <input type="hidden" id="itemId" />
 
         <div class="form-group">
-          <label>Item Name *</label>
+          <label>Item Name * (e.g. rename Olive Oil to Sunflower Oil)</label>
           <input type="text" id="itemName" required placeholder="e.g. Greek Yogurt, Basmati Rice" />
         </div>
 
@@ -589,10 +640,10 @@
         </div>
 
         <div class="modal-actions">
-          <button type="button" id="modalDeleteBtn" class="btn btn-secondary" style="color: var(--danger); display: none;" onclick="deleteCurrentPantryItem()">Delete</button>
+          <button type="button" id="modalDeleteBtn" class="btn btn-secondary" style="color: var(--danger); display: none;" onclick="deleteCurrentPantryItem()">Delete Item</button>
           <div style="display: flex; gap: 8px; margin-left: auto;">
             <button type="button" class="btn btn-secondary" onclick="closeItemModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save Item</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
           </div>
         </div>
       </form>
@@ -649,6 +700,15 @@
         ]
       };
       saveState();
+    }
+
+    function clearAllDataPrompt() {
+      if (confirm("Are you sure you want to remove ALL items and start with a completely empty pantry?")) {
+        state = { pantry: [], shoppingList: [] };
+        saveState();
+        renderPantry();
+        renderShoppingList();
+      }
     }
 
     function switchTab(tab) {
@@ -710,7 +770,7 @@
       if (items.length === 0) {
         container.innerHTML = `
           <div class="empty-state">
-            <p>No pantry items found matching your filters.</p>
+            <p>No pantry items found. Tap <strong>+ Add Item</strong> to add what you have at home.</p>
           </div>
         `;
         return;
@@ -725,8 +785,11 @@
 
         return `
           <div class="${cardClass}">
-            <div class="card-info" onclick="editItem('${item.id}')" style="cursor: pointer;" title="Click to edit details">
-              <div class="card-title">${item.name}</div>
+            <div class="card-info">
+              <div class="card-title-row">
+                <span class="card-title" title="${item.name}">${item.name}</span>
+                <button class="btn-quick-edit" onclick="editItem('${item.id}')" title="Rename or edit details">✏️</button>
+              </div>
               <div class="card-meta">
                 <span class="tag">${item.location}</span>
                 ${isOutOfStock ? `<span class="tag alert">Out of Stock</span>` : ''}
@@ -734,10 +797,10 @@
               </div>
             </div>
 
-            <div class="card-actions" onclick="event.stopPropagation()">
-              <!-- Counter with Direct Text Input + Buttons -->
+            <div class="card-actions">
+              <!-- Counter with Direct Number Input + Buttons -->
               <div class="counter">
-                <button type="button" onclick="changeQty('${item.id}', -1)">−</button>
+                <button type="button" onclick="changeQty('${item.id}', -1)" title="Decrease by 1">−</button>
                 <div class="counter-input-wrap">
                   <input 
                     type="number" 
@@ -750,11 +813,17 @@
                   />
                   <span class="counter-unit">${item.unit}</span>
                 </div>
-                <button type="button" onclick="changeQty('${item.id}', 1)">+</button>
+                <button type="button" onclick="changeQty('${item.id}', 1)" title="Increase by 1">+</button>
               </div>
 
+              <!-- Quick Add to Shopping List -->
               <button class="btn-quick-cart" onclick="sendToShoppingList('${item.id}')" title="Add to shopping list">
                 🛒+
+              </button>
+
+              <!-- One-click Direct Remove from Inventory -->
+              <button class="btn-quick-delete" onclick="quickDeletePantryItem('${item.id}', '${item.name.replace(/'/g, "\\'")}')" title="Remove item permanently">
+                🗑️
               </button>
             </div>
           </div>
@@ -762,7 +831,6 @@
       }).join('');
     }
 
-    // Step change (+1 / -1)
     function changeQty(id, delta) {
       const item = state.pantry.find(i => i.id === id);
       if (!item) return;
@@ -773,20 +841,31 @@
       renderPantry();
     }
 
-    // Direct figure entry (e.g. typing "30")
     function setDirectQty(id, value) {
       const item = state.pantry.find(i => i.id === id);
       if (!item) return;
 
       const parsed = parseFloat(value);
       if (isNaN(parsed) || parsed < 0) {
-        renderPantry(); // reset to valid current value
+        renderPantry();
         return;
       }
 
       item.qty = Number(parsed.toFixed(2));
       saveState();
       renderPantry();
+    }
+
+    // Direct removal from card
+    function quickDeletePantryItem(id, name) {
+      if (confirm(`Remove "${name}" completely from your home pantry?`)) {
+        // Remove from pantry
+        state.pantry = state.pantry.filter(p => p.id !== id);
+        // Also clean up any lingering item in shopping list
+        state.shoppingList = state.shoppingList.filter(s => s.pantryId !== id);
+        saveState();
+        renderPantry();
+      }
     }
 
     function sendToShoppingList(pantryId) {
@@ -871,7 +950,7 @@
             />
             <span style="font-size: 0.8rem; color: var(--text-muted);">${item.unit}</span>
           </div>
-          <button class="btn-icon" style="color: var(--danger); border: none;" onclick="deleteShopItem('${item.id}')">
+          <button class="btn-icon" style="color: var(--danger); border: none;" onclick="deleteShopItem('${item.id}')" title="Remove from shopping list">
             ✕
           </button>
         </div>
@@ -925,6 +1004,15 @@
       renderShoppingList();
     }
 
+    function clearEntireShoppingList() {
+      if (state.shoppingList.length === 0) return;
+      if (confirm("Clear all items currently in your shopping list?")) {
+        state.shoppingList = [];
+        saveState();
+        renderShoppingList();
+      }
+    }
+
     function restockChecked() {
       const checkedItems = state.shoppingList.filter(s => s.checked);
 
@@ -974,7 +1062,7 @@
       const item = state.pantry.find(i => i.id === id);
       if (!item) return;
 
-      document.getElementById('modalHeading').textContent = "Edit Item";
+      document.getElementById('modalHeading').textContent = "Edit / Rename Item";
       document.getElementById('itemId').value = item.id;
       document.getElementById('itemName').value = item.name;
       document.getElementById('itemQty').value = item.qty;
@@ -993,12 +1081,9 @@
     function deleteCurrentPantryItem() {
       const id = document.getElementById('itemId').value;
       if (!id) return;
-      if (confirm("Are you sure you want to delete this item completely?")) {
-        state.pantry = state.pantry.filter(p => p.id !== id);
-        saveState();
-        closeItemModal();
-        renderPantry();
-      }
+      const item = state.pantry.find(p => p.id === id);
+      quickDeletePantryItem(id, item ? item.name : "this item");
+      closeItemModal();
     }
 
     function saveItem(e) {
@@ -1011,6 +1096,7 @@
       const threshold = parseFloat(document.getElementById('itemThreshold').value) || 0;
 
       if (id) {
+        // Edit / Rename existing
         const item = state.pantry.find(i => i.id === id);
         if (item) {
           item.name = name;
@@ -1018,6 +1104,11 @@
           item.unit = unit;
           item.location = location;
           item.threshold = threshold;
+
+          // If renamed, update name on shopping list as well
+          state.shoppingList.forEach(s => {
+            if (s.pantryId === id) s.name = name;
+          });
         }
       } else {
         state.pantry.push({
@@ -1033,6 +1124,7 @@
       saveState();
       closeItemModal();
       renderPantry();
+      renderShoppingList();
     }
 
     // -------------------------------------------------------------
